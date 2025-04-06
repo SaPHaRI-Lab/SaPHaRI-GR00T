@@ -26,3 +26,7 @@ video_path       = optional, for video files (null if unused)
 "video_path": "videos/chunk-{episode_chunk:03d}/{video_key}/episode_{episode_index:06d}.mp4",
 
 chunk:03d and episodes:06d = decimal places (Example: 000, 0000000)
+
+
+###
+We are attempting to this without POV interpretation
