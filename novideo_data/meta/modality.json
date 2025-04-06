@@ -19,6 +19,11 @@
         "end": 14
       }
     },
+    "video": {
+      "ego_view": {
+          "original_key": "observation.images.ego_view"
+      }
+    },
     "annotation": {
       "human.action.task_description": {},
       "human.validity": {}
