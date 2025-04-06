@@ -1,0 +1,150 @@
+{
+    "codebase_version": "v1.0",
+    "robot_type": "Baxter_Robot",
+    "total_episodes": 5, 
+    "total_frames": 2096,
+    "total_tasks": 6,
+    "total_videos": 2,
+    "total_chunks": 0,
+    "chunks_size": 1000,
+    "fps": 20.0,
+    "splits": {
+        "train": "0:100"
+    },
+    "data_path": "data/chunk-{episode_chunk:03d}/episode_{episode_index:06d}.parquet",
+    "video_path": "videos/chunk-{episode_chunk:03d}/{video_key}/episode_{episode_index:06d}.mp4",
+    "features": {
+        "observation.images.egoview": {
+            "dtype": "video",
+            "shape": [
+                800,
+                1280,
+                3
+            ],
+            "names": [
+                "height",
+                "width",
+                "channel"
+            ],
+            "video_info": {
+                "video.fps": 20.0,
+                "video.codec": "h264",
+                "video.pix_fmt": "yuv420p",
+                "video.is_depth_map": false,
+                "has_audio": false
+            }
+        },
+        "observation.images.ego_view": {
+            "dtype": "video",
+            "shape": [
+                256,
+                256,
+                3
+            ],
+            "names": [
+                "height",
+                "width",
+                "channel"
+            ],
+            "video_info": {
+                "video.fps": 20.0,
+                "video.codec": "h264",
+                "video.pix_fmt": "yuv420p",
+                "video.is_depth_map": false,
+                "has_audio": false
+            }
+        },
+        "observation.state": {
+            "dtype": "float64",
+            "shape": [
+                14
+            ],
+            "names": [
+                "left_s0",
+                "left_s1",
+                "left_e0",
+                "left_e1",
+                "left_w0",
+                "left_w1",
+                "left_w2",
+                "right_s0",
+                "right_s1",
+                "right_e0",
+                "right_e1",
+                "right_w0",
+                "right_w1",
+                "right_w2"
+            ]
+        },
+        "action": {
+            "dtype": "float64",
+            "shape": [
+                14
+            ],
+            "names": [
+                "left_s0",
+                "left_s1",
+                "left_e0",
+                "left_e1",
+                "left_w0",
+                "left_w1",
+                "left_w2",
+                "right_s0",
+                "right_s1",
+                "right_e0",
+                "right_e1",
+                "right_w0",
+                "right_w1",
+                "right_w2"
+            ]
+        },
+        "timestamp": {
+            "dtype": "float64",
+            "shape": [
+                1
+            ]
+        },
+        "annotation.human.action.task_description": {
+            "dtype": "int64",
+            "shape": [
+                1
+            ]
+        },
+        "task_index": {
+            "dtype": "int64",
+            "shape": [
+                1
+            ]
+        },
+        "annotation.human.validity": {
+            "dtype": "int64",
+            "shape": [
+                1
+            ]
+        },
+        "episode_index": {
+            "dtype": "int64",
+            "shape": [
+                1
+            ]
+        },
+        "index": {
+            "dtype": "int64",
+            "shape": [
+                1
+            ]
+        },
+        "next.reward": {
+            "dtype": "float64",
+            "shape": [
+                1
+            ]
+        },
+        "next.done": {
+            "dtype": "bool",
+            "shape": [
+                1
+            ]
+        }
+    }
+}
