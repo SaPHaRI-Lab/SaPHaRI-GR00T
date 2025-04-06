@@ -2,7 +2,6 @@
 As preliminary testing we are not using the video component. We plan to add it later on.
 
 ### Current Todo
-- [ ] Reformat Parquet for LeRobot Format
 - [ ] Change the following json files:
     - stats.json (use the stat_maker)
     - episode.jsonl (the length sizes)
@@ -12,6 +11,8 @@ As preliminary testing we are not using the video component. We plan to add it l
 - [✓] Completed Export Baxter Gestures (1 of each gesture)
 - [✓] Completed Parquet Converter
 - [✓] Completed Reading the Paper
+- [✓] Reformat Parquet for LeRobot Format
+- [✓] Refactor the code for other files and get the CSV
 
 ### Future Works
 - [ ] Standardize the FPS/speed of the interpolated movement of the arms 
@@ -26,7 +27,8 @@ As preliminary testing we are not using the video component. We plan to add it l
 ### Notes
 - Modality #s might not be in the right order.
 - Order of the join positions could be different for each of the gestures.
-
+- The gestures are solely the gestures they do not go back to home position
+- Leaving the RL components out of the stats.json file
 
 
 ### Column Name

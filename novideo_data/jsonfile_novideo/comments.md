@@ -1,7 +1,7 @@
 In episodes:
 index = #
 task = description, real
-length = # of parquet lines
+length = # of csv lines (Total line - 1 :: Does not count the first line (the names))
 
 In tasks:
 id     = numeric task ID
@@ -28,4 +28,11 @@ video_path       = optional, for video files (null if unused)
 chunk:03d and episodes:06d = decimal places (Example: 000, 0000000)
 
 
-###We are attempting to this without POV interpretation
+For the Stats stuff:
+Field	Keep it if...
+timestamp	            You're modeling things over time
+task_index	            You're training a multi-task model
+annotation.*	        You're using language/text input or filtering data
+next.reward, next.done	You're using reinforcement learning
+index, episode_index	Useful for tracking/debugging but not required
+
