@@ -28,5 +28,4 @@ video_path       = optional, for video files (null if unused)
 chunk:03d and episodes:06d = decimal places (Example: 000, 0000000)
 
 
-###
-We are attempting to this without POV interpretation
+###We are attempting to this without POV interpretation

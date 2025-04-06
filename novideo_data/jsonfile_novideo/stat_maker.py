@@ -1,33 +1,19 @@
 import pandas as pd
 import numpy as np
-import glob, json, os
+import json
+import os
 
-parquet_folder = "data"            # Folder containing .parquet files
-output_path = "meta/stats.json"    # Output file
+# CONFIG
+input_parquet = "episode_000000.parquet"
+output_json = "episode_000000_stats.json"
 
-FIELDS = [
-    "observation.state",
-    "action",
-    "timestamp",
-    "task_index",
-    "annotation.human.action.task_description",
-    "annotation.human.validity",
-    "episode_index",
-    "index",
-    "next.reward",
-    "next.done"
-]
+# Load parquet
+df = pd.read_parquet(input_parquet)
 
-data_accumulator = {key: [] for key in FIELDS}
+# Init storage
+stats = {}
 
-for file in glob.glob(os.path.join(parquet_folder, "*.parquet")):
-    df = pd.read_parquet(file)
-    for key in FIELDS:
-        if key in df.columns:
-            values = df[key].apply(lambda x: x if isinstance(x, list) else [x])
-            stacked = stacked = np.vstack(values.tolist())
-            data_accumulator[key].append(stacked)
-
+# Compute function
 def compute_stats(arr):
     return {
         "mean": arr.mean(axis=0).tolist(),
@@ -38,14 +24,20 @@ def compute_stats(arr):
         "q99": np.percentile(arr, 99, axis=0).tolist()
     }
 
-stats = {}
-for key, collected in data_accumulator.items():
-    if collected:
-        combined = np.vstack(collected)
-        stats[key] = compute_stats(combined)
+#
+for col in df.columns:
+    print(f"Processing: {col}")
+    try:
+        # Ensure list type (e.g., [14-dim] or scalar wrapped as [x])
+        values = df[col].apply(lambda x: x if isinstance(x, list) else [x])
+        data = np.vstack(values.tolist())
+        stats[col] = compute_stats(data)
+    except Exception as e:
+        print(f"⚠️ Skipped {col}: {e}")
 
-os.makedirs(os.path.dirname(output_path), exist_ok=True)
-with open(output_path, "w") as f:
+#JSON
+os.makedirs(os.path.dirname(output_json), exist_ok=True)
+with open(output_json, "w") as f:
     json.dump(stats, f, indent=2)
 
-print(f"✅ Full stats.json saved to: {output_path}")
+print(f"stats.json saved to: {output_json}")

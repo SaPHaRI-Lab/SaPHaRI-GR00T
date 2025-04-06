@@ -9,7 +9,6 @@
         "train": "0:100"
     },
     "data_path": "data/chunk-{episode_chunk:03d}/episode_{episode_index:06d}.parquet",
-    "video_path": "videos/chunk-{episode_chunk:03d}/{video_key}/episode_{episode_index:06d}.mp4",
     "features": {
         "observation.state": {
             "dtype": "float64",
@@ -17,20 +16,7 @@
                 14
             ],
             "names": [
-                "left_s0",
-                "left_s1",
-                "left_e0",
-                "left_e1",
-                "left_w0",
-                "left_w1",
-                "left_w2",
-                "right_s0",
-                "right_s1",
-                "right_e0",
-                "right_e1",
-                "right_w0",
-                "right_w1",
-                "right_w2"
+                "left_s0", "left_s1", "left_e0", "left_e1", "left_w0", "left_w1", "left_w2", "right_s0", "right_s1", "right_e0", "right_e1", "right_w0", "right_w1", "right_w2"
             ]
         },
         "action": {
@@ -39,20 +25,7 @@
                 14
             ],
             "names": [
-                "left_s0",
-                "left_s1",
-                "left_e0",
-                "left_e1",
-                "left_w0",
-                "left_w1",
-                "left_w2",
-                "right_s0",
-                "right_s1",
-                "right_e0",
-                "right_e1",
-                "right_w0",
-                "right_w1",
-                "right_w2"
+                "left_s0", "left_s1", "left_e0", "left_e1", "left_w0", "left_w1", "left_w2", "right_s0", "right_s1", "right_e0", "right_e1", "right_w0", "right_w1", "right_w2"
             ]
         },
         "timestamp": {
