@@ -7,12 +7,12 @@ As preliminary testing we are not using the video component. We plan to add it l
     - episode.jsonl (the length sizes)
 - [ ] Load the dataset on the Gr00T
 
-### Completed Column ✓
-- [✓] Completed Export Baxter Gestures (1 of each gesture)
-- [✓] Completed Parquet Converter
-- [✓] Completed Reading the Paper
-- [✓] Reformat Parquet for LeRobot Format
-- [✓] Refactor the code for other files and get the CSV
+### Completed ✓
+- [x] Completed Export Baxter Gestures (1 of each gesture)
+- [x] Completed Parquet Converter
+- [x] Completed Reading the Paper
+- [x] Reformat Parquet for LeRobot Format
+- [x] Refactor the code for other files and get the CSV
 
 ### Future Works
 - [ ] Standardize the FPS/speed of the interpolated movement of the arms 
