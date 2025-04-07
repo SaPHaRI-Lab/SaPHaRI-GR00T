@@ -2,17 +2,19 @@
 As preliminary testing we are not using the video component. We plan to add it later on.
 
 ### Current Todo
-- [ ] Change the following json files:
-    - stats.json (use the stat_maker)
-    - episode.jsonl (the length sizes)
 - [ ] Load the dataset on the Gr00T
+    -  [ ] Get the video formatting to work again...
+    -  [ ] Change the Parquet File to the example in LeRobot_compatible_data_schema
 
 ### Completed ✓
 - [x] Completed Export Baxter Gestures (1 of each gesture)
 - [x] Completed Parquet Converter
 - [x] Completed Reading the Paper
 - [x] Reformat Parquet for LeRobot Format
-- [x] Refactor the code for other files and get the CSV
+- [x] Refactor the code for other files and got the CSV
+    - [x] Change the following json files:
+        - stats.json (use the stat_maker)
+        - episode.jsonl (the length sizes)
 
 ### Future Works
 - [ ] Standardize the FPS/speed of the interpolated movement of the arms 
@@ -30,6 +32,7 @@ As preliminary testing we are not using the video component. We plan to add it l
 - The gestures are solely the gestures they do not go back to home position
 - Leaving the RL components out of the stats.json file
 
+----------------------------------------------------------
 
 ### Column Name
 - [ ] Task title ~3d #type @name yyyy-mm-dd  
