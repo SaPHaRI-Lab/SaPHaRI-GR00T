@@ -516,7 +516,6 @@ class LeRobotSingleDataset(Dataset):
         data = {}
         # Get the data for all modalities
         self.curr_traj_data = self.get_trajectory_data(trajectory_id)
-        print("Get_step_data", self.curr_traj_data)
         for modality in self.modality_keys:
             # Get the data corresponding to each key in the modality
             for key in self.modality_keys[modality]:
@@ -649,7 +648,6 @@ class LeRobotSingleDataset(Dataset):
         timestamp: np.ndarray = self.curr_traj_data["timestamp"].to_numpy()
         # Get the corresponding video timestamps from the step indices
         video_timestamp = timestamp[step_indices]
-
         return get_frames_by_timestamps(
             video_path.as_posix(),
             video_timestamp,
@@ -695,8 +693,6 @@ class LeRobotSingleDataset(Dataset):
             le_key = key
         # Get the data array, shape: (T, D)
         assert self.curr_traj_data is not None, f"No data found for {trajectory_id=}"
-        print("Cols", self.curr_traj_data.columns)
-        print("le_key", le_key)
         assert le_key in self.curr_traj_data.columns, f"No {le_key} found in {trajectory_id=}"
         data_array: np.ndarray = np.stack(self.curr_traj_data[le_key])  # type: ignore
         assert data_array.ndim == 2, f"Expected 2D array, got {data_array.shape} array"
@@ -782,6 +778,7 @@ class LeRobotSingleDataset(Dataset):
             base_index (int): The base index of the trajectory.
         """
         if modality == "video":
+            print(trajectory_id, key, base_index)
             return self.get_video(trajectory_id, key, base_index)
         elif modality == "state" or modality == "action":
             return self.get_state_or_action(trajectory_id, modality, key, base_index)
