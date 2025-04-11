@@ -10,7 +10,10 @@ As preliminary testing we are not using the video component. We plan to add it l
 - [ ] Redo the gestures: wave, highfive so that they are more in the POV view
 - [ ] Get the mp4 Files
     - [ ] Parse the videos to the appriate fps and resolutions
-    - [ ] 
+    - [ ] Determine Steps per frame Correlation for Gr00t and the dataset and the video
+- [ ] What are the gt_action points?
+- [ ] Make the code that will lower the amount of interpolated points 
+    - [ ] You can use the current way-points or other ones
 
 ### Completed ✓
 - [x] Completed Export Baxter Gestures (1 of each gesture)
