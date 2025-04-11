@@ -1,16 +1,15 @@
 # No-Video Based Gr00T N1
 As preliminary testing we are not using the video component. We plan to add it later on.
 
+### Questions
+- [ ] Ground Truth for the gestures why is it zero on the matplot?
+
 ### Current Todo
 - [ ] Egoview Error
 - [ ] Figure out the Error with the End-Effector Arms (left_hands and right_hands)
-- [ ] Ground Truth for the gestures why is it zero on the matplot?
 - [ ] Change the dataset for the wave, highfive, sup to 10 - 50 samples
     - [ ] Redo the Parquet
-- [ ] Redo the gestures: wave, highfive so that they are more in the POV view
-- [ ] Get the mp4 Files
-    - [ ] Parse the videos to the appriate fps and resolutions
-    - [ ] Determine Steps per frame Correlation for Gr00t and the dataset and the video
+- [WIP] Redo the gestures: wave, highfive so that they are more in the POV view
 - [ ] What are the gt_action points?
 - [ ] Make the code that will lower the amount of interpolated points 
     - [ ] You can use the current way-points or other ones
@@ -24,6 +23,7 @@ As preliminary testing we are not using the video component. We plan to add it l
     - [x] Change the following json files:
         - stats.json (use the stat_maker)
         - episode.jsonl (the length sizes)
+- [ ] V1: Get the mp4 Files
 
 ### Future Works
 - [ ] Standardize the FPS/speed of the interpolated movement of the arms 
