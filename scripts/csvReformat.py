@@ -5,7 +5,11 @@ import os, argparse
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--folder', help='', default='novideo_data/CSV_files/')
+    parser.add_argument('--folder', help='The folder with each CSV file', default='novideo_data/CSV_files/')
+    parser.add_argument('-t', '--task_order', 
+            help='The episode number to give to each csv, in alphabetical order (order of the files)', 
+            default=[1, 2, 3, 0], type=list
+    )
     args = parser.parse_args()
     # CONFIG
     csvs = [os.path.join(args.folder, file) for file in os.listdir(args.folder) if os.path.isfile(os.path.join(args.folder, file))]
@@ -61,7 +65,7 @@ if __name__ == "__main__":
 
         # Save to parquet
         
-        out.to_parquet(os.path.join('novideo_data/data/chunk-000', output_parquet(i)), index=False)
-        print(f"✅ Saved to: {output_parquet(i)}")
+        out.to_parquet(os.path.join('novideo_data/data/chunk-000', output_parquet(args.task_order[i])), index=False)
+        print(f"✅ Saved {csv} to: {output_parquet(args.task_order[i])}")
 
 

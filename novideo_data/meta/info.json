@@ -1,7 +1,7 @@
 {
     "codebase_version": "v1.0",
     "robot_type": "Baxter_Robot",
-    "total_episodes": 5, 
+    "total_episodes": 4, 
     "total_frames": 1662,
     "total_tasks": 4,
     "total_videos": 4,
