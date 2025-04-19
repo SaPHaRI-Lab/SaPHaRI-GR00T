@@ -135,7 +135,18 @@ class Gr1ArmsOnlyDataConfig(BaseDataConfig):
 
 ###########################################################################################
 
+class BaxterArmsConfig(Gr1ArmsOnlyDataConfig):
+    video_keys = ["video.ego_view"]
+    state_keys = [
+        "state.left_arm",
+        "state.right_arm",
+    ]
+    action_keys = [
+        "action.left_arm",
+        "action.right_arm",
+    ]
 
+###########################################################################################
 class So100DataConfig(BaseDataConfig):
     video_keys = ["video.webcam"]
     state_keys = ["state.single_arm", "state.gripper"]
@@ -688,6 +699,7 @@ class Gr1ArmsWaistDataConfig(Gr1ArmsOnlyDataConfig):
 ###########################################################################################
 
 DATA_CONFIG_MAP = {
+    "baxter_arms": BaxterArmsConfig(),
     "gr1_arms_waist": Gr1ArmsWaistDataConfig(),
     "gr1_arms_only": Gr1ArmsOnlyDataConfig(),
     "gr1_full_upper_body": Gr1FullUpperBodyDataConfig(),
