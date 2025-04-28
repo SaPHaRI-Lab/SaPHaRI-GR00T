@@ -11,6 +11,7 @@ import json, os, pandas as pd
 PRE_TRAINED_MODEL_PATH = "nvidia/GR00T-N1-2B"
 DATASET_PATH = "novideo_data/"
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 def predict_actions(
     policy: BasePolicy,
     dataset: LeRobotSingleDataset,
@@ -20,9 +21,25 @@ def predict_actions(
     action_horizon=16,
     policy_name="Fine-tuned"
 ):
+    state_joints_across_time = []
+    gt_action_joints_across_time = []
     pred_action_joints_across_time = []
+    
     for step_count in tqdm(range(steps)):
         data_point = dataset.get_step_data(traj_id, step_count)
+
+        # NOTE this is to get all modality keys concatenated
+        # concat_state = data_point[f"state.{modality_keys[0]}"][0]
+        # concat_gt_action = data_point[f"action.{modality_keys[0]}"][0]
+        concat_state = np.concatenate(
+            [data_point[f"state.{key}"][0] for key in modality_keys], axis=0
+        )
+        concat_gt_action = np.concatenate(
+            [data_point[f"action.{key}"][0] for key in modality_keys], axis=0
+        )
+
+        state_joints_across_time.append(concat_state)
+        gt_action_joints_across_time.append(concat_gt_action)
 
         if step_count % action_horizon == 0:
             print("inferencing at step: ", step_count)
@@ -35,7 +52,7 @@ def predict_actions(
                     axis=0,
                 )
                 pred_action_joints_across_time.append(concat_pred_action)
-    return pred_action_joints_across_time
+    return state_joints_across_time, gt_action_joints_across_time, pred_action_joints_across_time
 
 def read_jsonl(file_path):
         data = []
@@ -68,9 +85,9 @@ if __name__ == "__main__":
         help="The model checkpoint that should be used for the policy",
         default="models/gr00t-1/finetuned-model/checkpoint-500/"
     )
-    # parser.add_argument('-f', '--filename',
-    #     help="Filename for the figure to be saved - will be saved in figures",
-    # )
+    parser.add_argument('-p', '--policy',
+        help="Filename for the gesture to be saved - will be saved in Gestures/policy",
+    )
     args = parser.parse_args()
     
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -112,19 +129,22 @@ if __name__ == "__main__":
         "right_w0", "right_w1", "right_w2"
     ]
 
-    trajectories = []
+    state_trajectories = []
+    gt_trajectories = []
+    pred_trajectories = []
     print(dataset.get_trajectory_data(0).shape)
     for i, task in enumerate(tasks):
-        trajectories.append(
-            predict_actions(
+        state, action, pred = predict_actions(
             policy=finetuned_policy,
             dataset=dataset,
             traj_id=i,
             steps=dataset.get_trajectory_data(i).shape[0],
             modality_keys=['left_arm', 'right_arm'],
             )
-        )
-    print(len(dataset.all_steps))
+        state_trajectories.append(state)
+        gt_trajectories.append(action)
+        pred_trajectories.append(pred)
+        
     for task, trajectory in zip(tasks, trajectories):
         baxter_joints = []
         # Get all waypoints for trajectory
@@ -132,8 +152,9 @@ if __name__ == "__main__":
             assert len(joint_order) == len(action), f"Length joint_order: {len(joint_order)}, Length action: {len(action)}"
             baxter_wp = {key:value for key, value in zip(joint_order, action)}
             baxter_joints.append(baxter_wp)
+        
         # Save waypoints to csv
-        filepath = f'Gestures/{" ".join(task["tasks"][0].split()[:3])}.csv'
+        filepath = f'Gestures/{policy}/{" ".join(task["tasks"][0].split()[:3])}.csv'
         directory = os.path.dirname(filepath)
         if directory and not os.path.exists(directory):
             os.makedirs(directory)

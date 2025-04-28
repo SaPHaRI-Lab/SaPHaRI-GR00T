@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=Fine_Tune_gr00t  # Job name
+#SBATCH --job-name=Demo_FineTuned_Policy  # Job name
 #SBATCH --ntasks=1                  # Number of tasks (processes)
 #SBATCH --gpus-per-task=1           # Number of CPU cores per task
 #SBATCH --mem=32G  # Request more memory (adjust as needed)
@@ -17,6 +17,6 @@ module load Miniconda3
 eval "$(conda shell.bash hook)"
 conda activate gr00t
 # Run your Python script
-# python scripts/gr00t_finetune.py --dataset-path demo_data/robot_sim.PickNPlace --num-gpus 1 --max-steps 500 --output-dir models/finetuned-demodata-model --data-config gr1_arms_only
+python scripts/gr00t_finetune.py --dataset-path demo_data/robot_sim.PickNPlace --num-gpus 1 --max-steps 500 --output-dir models/finetuned-demodata-model --data-config gr1_arms_only
 python -u scripts/get_trajectory_mse.py -em new_embodiment --data_config gr1_arms_only -d demo_data/robot_sim.PickNPlace -ckpt models/finetuned-demodata-model -p Finetuned-Policy-DemoData
 conda deactivate

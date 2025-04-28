@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=Fine_Tune_gr00t  # Job name
+#SBATCH --job-name=Demo_FineTuned_Baxter_Data  # Job name
 #SBATCH --ntasks=1                  # Number of tasks (processes)
 #SBATCH --gpus-per-task=1           # Number of CPU cores per task
 #SBATCH --mem=32G  # Request more memory (adjust as needed)

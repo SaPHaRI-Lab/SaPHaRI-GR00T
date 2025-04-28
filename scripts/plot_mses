@@ -1,0 +1,63 @@
+import warnings
+from gr00t.experiment.data_config import DATA_CONFIG_MAP
+from gr00t.model.policy import Gr00tPolicy, BasePolicy
+from gr00t.data.schema import EmbodimentTag
+from gr00t.data.dataset import LeRobotSingleDataset
+import numpy as np
+from tqdm import tqdm
+import argparse, matplotlib.pyplot as plt
+import json, os, pandas as pd
+PRE_TRAINED_MODEL_PATH = "nvidia/GR00T-N1-2B"
+DATASET_PATH = "novideo_data/"
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+def plot_experiment_mses(
+    modality_keys: str,
+    plot: bool,
+    tasks: list,
+    csv_path: str,
+    filemname: str,
+):      
+    experiment = pd.read_csv()
+
+    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(16, 14))
+    for i, ax in enumerate(axes.flatten()):
+        for experiment in experiments:
+            mse = np.mean((gt_action_joints_across_time[:, i] - pred_action_joints_across_time[:, i]) ** 2)
+            ax.plot(mse, label=experiment)
+        ax.set_title("Sequential MSE for each experiment")
+        ax.set_xlabel('Experiment #')
+        ax.set_ylabel('Total Mean Squared Error across all Joints')
+        ax.legend()
+
+def read_jsonl(file_path):
+        data = []
+        with open(file_path, 'r') as file:
+            for line in file:
+                try:
+                    json_object = json.loads(line)
+                    data.append(json_object)
+                except json.JSONDecodeError:
+                    print(f"Skipping invalid JSON line: {line.strip()}")
+        return data
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-f', '--filename',
+        help="Filename for the plot to be saved - will be saved in Figures/MSE",
+    )
+    parser.add_argument('-c', '--csv_path',
+        help="Filename for the csvs to be used",
+    )
+    args = parser.parse_args()
+
+    for i, task in enumerate(tasks):
+        mse = plot_experiment_mses(
+            modality_keys=["right_arm"],
+            plot=True,
+            tasks=tasks,
+            filemname=args.filename,
+            csv_path=args.csv_path,
+        )
+
+        print(f"MSE loss for trajectory {i}:", mse)

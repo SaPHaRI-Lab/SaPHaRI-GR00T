@@ -11,12 +11,13 @@ import json, os
 PRE_TRAINED_MODEL_PATH = "nvidia/GR00T-N1-2B"
 DATASET_PATH = "novideo_data/"
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 def calc_mse_for_single_trajectory(
     policy: BasePolicy,
     dataset: LeRobotSingleDataset,
     traj_id: int,
     modality_keys: list,
-    steps=300,
+    steps=600,
     action_horizon=16,
     plot=True,
     save=True,
@@ -26,7 +27,8 @@ def calc_mse_for_single_trajectory(
     state_joints_across_time = []
     gt_action_joints_across_time = []
     pred_action_joints_across_time = []
-    
+
+    steps = dataset.get_trajectory_data(traj_id).shape[0]
     for step_count in tqdm(range(steps)):
         data_point = dataset.get_step_data(traj_id, step_count)
 
@@ -86,13 +88,6 @@ def calc_mse_for_single_trajectory(
             ax.plot(state_joints_across_time[:, i], label="state joints")
             ax.plot(gt_action_joints_across_time[:, i], label="gt action joints")
             ax.plot(pred_action_joints_across_time[:, i], label="pred action joints")
-
-            # put a dot every ACTION_HORIZON
-            for j in range(0, steps, action_horizon):
-                if j == 0:
-                    ax.plot(j, gt_action_joints_across_time[j, i], "ro", label="inference point")
-                else:
-                    ax.plot(j, gt_action_joints_across_time[j, i], "ro")
 
             graph_mse = np.mean((gt_action_joints_across_time[:, i] - pred_action_joints_across_time[:, i]) ** 2)
             ax.set_title(f"{' '.join(task['tasks'][0].split()[:3])} - Joint {i} MSE: {graph_mse}")
