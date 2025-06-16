@@ -145,7 +145,7 @@ if __name__ == "__main__":
         gt_trajectories.append(action)
         pred_trajectories.append(pred)
         
-    for task, trajectory in zip(tasks, trajectories):
+    for task, trajectory in zip(tasks, pred_trajectories):
         baxter_joints = []
         # Get all waypoints for trajectory
         for action in trajectory:
@@ -154,7 +154,7 @@ if __name__ == "__main__":
             baxter_joints.append(baxter_wp)
         
         # Save waypoints to csv
-        filepath = f'Gestures/{policy}/{" ".join(task["tasks"][0].split()[:3])}.csv'
+        filepath = f'Gestures/{args.policy}/{" ".join(task["tasks"][0].split()[:3])}.csv'
         directory = os.path.dirname(filepath)
         if directory and not os.path.exists(directory):
             os.makedirs(directory)
@@ -162,5 +162,3 @@ if __name__ == "__main__":
             for row in baxter_joints:
                 cssv = ",".join(f'"{key}":{val}' for key, val in row.items())
                 gestures.write("{" + cssv + "}\n")
-
-        
