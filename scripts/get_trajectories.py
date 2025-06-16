@@ -69,7 +69,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-em', '--embodiment_tag', 
         help='The embodiment tag that is used to finetune the dataset.\nFound in gr00t/data/embodiment_tags.py. Default is "baxter".',
-        default='baxter',
+        default='new_embodiment',
         choices=[embd.value for embd in EmbodimentTag._member_map_.values()]
     )
     parser.add_argument('-dc', '--data_config',

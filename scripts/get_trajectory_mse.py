@@ -95,6 +95,10 @@ def calc_mse_for_single_trajectory(
             ax.set_ylabel('Rotation in Radians')
             ax.legend()
 
+        last_ax = axes.flatten()[-1]
+        last_ax.axis('off')
+        last_ax.text(0.5, 0.5, f"Summary: MSE across all trajectories - {mse}.", 
+                    ha='center', va='center', fontsize=12, wrap=True)
         plt.tight_layout()
         plt.show()
         if save:
@@ -121,13 +125,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-em', '--embodiment_tag', 
         help='The embodiment tag that is used to finetune the dataset.\nFound in gr00t/data/embodiment_tags.py. Default is "baxter".',
-        default='baxter',
         choices=[embd.value for embd in EmbodimentTag._member_map_.values()]
     )
     parser.add_argument('-dc', '--data_config',
         help='The embodiment tag that is used to finetune the dataset.\nFound in gr00t/data/embodiment_tags.py. Default is "baxter_arms".',
         choices=[config for config in DATA_CONFIG_MAP.keys()],
-        default='baxter_arms'
     )
     parser.add_argument('-d', '--dataset', 
         help="The dataset that should be used to calculate the MSE",
@@ -188,7 +190,7 @@ if __name__ == "__main__":
             dataset,
             traj_id=i,
             modality_keys=["right_arm"],   # we will only evaluate the right arm and right hand
-            steps=150,
+            steps=500,
             action_horizon=16,
             plot=True,
             save=args.save,

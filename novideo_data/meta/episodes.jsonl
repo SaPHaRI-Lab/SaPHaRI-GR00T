@@ -1,4 +1,4 @@
-{"episode_index": 0, "tasks": ["Wave right arm", "valid"], "length": 2307}
-{"episode_index": 1, "tasks": ["Handshake with right arm", "valid"], "length": 21}
-{"episode_index": 2, "tasks": ["High five with right arm", "valid"], "length": 2558}
-{"episode_index": 3, "tasks": ["Sup greeting", "valid"], "length": 603}
+{"episode_index": 0, "tasks": ["Wave right arm", "valid"], "length": 462}
+{"episode_index": 1, "tasks": ["Handshake with right arm", "valid"], "length": 282}
+{"episode_index": 2, "tasks": ["High five with right arm", "valid"], "length": 512}
+{"episode_index": 3, "tasks": ["Sup greeting", "valid"], "length": 121}

@@ -6,7 +6,7 @@ import os, argparse
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--folder', help='The folder with each CSV file', default='novideo_data/CSV_files/')
-    parser.add_argument('-r', '--remove', help="The number of rows to remove from the CSV", type=int, default=15)
+    parser.add_argument('-r', '--remove', help="The number of rows to remove from the CSV", type=int, default=5)
     args = parser.parse_args()
     
     # CONFIG
