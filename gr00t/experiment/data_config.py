@@ -136,7 +136,18 @@ class FourierGr1ArmsOnlyDataConfig(BaseDataConfig):
 
 ###########################################################################################
 
+class BaxterArmsConfig(FourierGr1ArmsOnlyDataConfig):
+    video_keys = ["video.ego_view"]
+    state_keys = [
+        "state.left_arm",
+        "state.right_arm",
+    ]
+    action_keys = [
+        "action.left_arm",
+        "action.right_arm",
+    ]
 
+###########################################################################################
 class So100DataConfig(BaseDataConfig):
     video_keys = ["video.webcam"]
     state_keys = ["state.single_arm", "state.gripper"]
@@ -883,6 +894,7 @@ DATA_CONFIG_MAP = {
     "fourier_gr1_arms_waist": FourierGr1ArmsWaistDataConfig(),
     "fourier_gr1_arms_only": FourierGr1ArmsOnlyDataConfig(),
     "fourier_gr1_full_upper_body": FourierGr1FullUpperBodyDataConfig(),
+    "baxter_arms": BaxterArmsConfig(),
     "bimanual_panda_gripper": BimanualPandaGripperDataConfig(),
     "bimanual_panda_hand": BimanualPandaHandDataConfig(),
     "single_panda_gripper": SinglePandaGripperDataConfig(),
