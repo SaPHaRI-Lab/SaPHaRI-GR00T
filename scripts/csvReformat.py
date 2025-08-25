@@ -71,15 +71,21 @@ if __name__ == "__main__":
         print(f"✅ Saved {csv} to: {output_parquet(args.task_order[i])}")
         
         steps_per_task.append(len(df))
-        
+    
+    # Save the current epsisodes.jsonl in an array
     with open('novideo_data/meta/episodes.jsonl', 'r') as file:
         for i, line in enumerate(file):
             obj = json.loads(line)
             arr.append(obj)
 
+    # Update episodes.jsonl with the correct length of the corresponding task
     with open('novideo_data/meta/episodes.jsonl', 'w') as file:
         for i, obj in enumerate(arr):
-            obj['length'] = steps_per_task[args.task_order.index(i)]
+            # TODO: Make this a dictionary
+            # arr - tasks are in the order found is episodes.jsonl
+            # steps_per_task - tasks are in the order found is in args.folder (alphabetical order)
+            # task_order has tasks in alphabetical order, holds the corresponding index the task has in episodes.json
+            obj['length'] = steps_per_task[args.task_order.index(i)]    # Maps steps_per_task order to order in episodes.jsonl
             # print(obj['tasks'], args.task_order.index(i))
             json.dump(obj, file)
             file.write("\n")
