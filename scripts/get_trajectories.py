@@ -159,6 +159,7 @@ if __name__ == "__main__":
         if directory and not os.path.exists(directory):
             os.makedirs(directory)
         with open(filepath, 'w') as gestures:
+            gestures.write(",".join(f'{key}' for key in joint_order))
             for row in baxter_joints:
-                cssv = ",".join(f'"{key}":{val}' for key, val in row.items())
-                gestures.write("{" + cssv + "}\n")
+                cssv = ",".join(f'{val}' for val in row.values())
+                gestures.write('\n' + cssv)
