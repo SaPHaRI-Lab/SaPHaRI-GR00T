@@ -14,6 +14,10 @@ if __name__ == "__main__":
     # CONFIG
     csvs = [os.path.join(args.folder, file) for file in os.listdir(args.folder) if os.path.isfile(os.path.join(args.folder, file))]
     csvs = sorted(csvs)
+    print("Sorted Order for CSVS")
+    for csv in csvs:
+        print(csv)
+    print("Corresponding index in episodes.jsonl: ", args.task_order)
     output_parquet = lambda i: f"episode_00000{i}.parquet"
     fps = 20.0
     task_id = 0
