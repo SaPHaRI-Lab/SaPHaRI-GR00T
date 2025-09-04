@@ -154,7 +154,7 @@ if __name__ == "__main__":
             baxter_joints.append(baxter_wp)
         
         # Save waypoints to csv
-        filepath = f'Gestures/{args.policy}/{" ".join(task["tasks"][0].split()[:3])}.csv'
+        filepath = f'Gestures/{args.policy}/{" ".join(task["tasks"][0])}.csv'
         directory = os.path.dirname(filepath)
         if directory and not os.path.exists(directory):
             os.makedirs(directory)
