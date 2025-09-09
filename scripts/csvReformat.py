@@ -31,7 +31,7 @@ if __name__ == "__main__":
     print('\n')
     fps = args.fps
     # TODO: Check what these numbers should be in the dataset frame based? ID based? Are they not used?
-    task_id = 0
+    task_id = 0 
     episode_index = 0
 
     # Expected input column order (your format)
@@ -69,11 +69,11 @@ if __name__ == "__main__":
         # Must be a list to added as a column
         out["action"] = np.vstack([data[1:], [data[-1]]]).tolist()
         out["timestamp"] = (np.arange(num_frames) / fps).round(5)
-        out["annotation.human.action.task_description"] = [task_id] * num_frames
-        out["task_index"] = [task_id] * num_frames
+        out["annotation.human.action.task_description"] = [description[csv.stem]] * num_frames
 
-        out["annotation.human.validity"] = [1] * num_frames
-        out["episode_index"] = [episode_index] * num_frames
+        out["task_index"] = [description[csv.stem]] * num_frames # index of the task description in the meta/tasks.jsonl file
+        out["annotation.human.validity"] = [len(csvs)] * num_frames # index of the task in the meta/tasks.jsonl file
+        out["episode_index"] = [description[csv.stem]] * num_frames # index of the episode
         out["index"] = list(range(num_frames))
         out["next.reward"] = [0.0] * num_frames
         out["next.done"] = [False] * num_frames
