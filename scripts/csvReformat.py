@@ -1,25 +1,36 @@
 import pandas as pd
 import numpy as np
 import os.path as path
-import os, argparse, json
+from pathlib import Path
+import os, argparse, json, shutil
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--folder', help='The folder with each CSV file', default='novideo_data/CSV_files/')
-    parser.add_argument('-t', '--task_order', 
-            help='The episode number to assign each csv, considered in alphabetical order', 
-            default=[1, 2, 3, 0], type=list
-    ) # Converts the alphabetical order of tasks in the filesystem to the real order in the dataset. e.g. Handshake -> index 0 -> task_order[0] = 1
+    parser.add_argument('--folder', '-f', help='The dataset folder', default='novideo_data')
+    parser.add_argument('--reduced', '-r', action='store_true', help='If the reduced versions of the CSVs should be used instead')
+    parser.add_argument('--fps', help='If the reduced versions of the CSVs should be used instead', default=20)
     args = parser.parse_args()
     # CONFIG
-    csvs = [os.path.join(args.folder, file) for file in os.listdir(args.folder) if os.path.isfile(os.path.join(args.folder, file))]
+    base_folder = Path(args.folder)
+    if not base_folder.exists():
+        raise Exception("No such folder exists")
+    data_folder = base_folder / 'raw_data_files'
+
+    # Grab all of the csvs in the given directory and sort by alphabetical order
+    csvs = [file for file in (data_folder / 'reduced_csvs').glob('*.csv')] if args.reduced else [file for file in data_folder.glob('*.csv')]
     csvs = sorted(csvs)
-    print("Sorted Order for CSVS")
-    for csv in csvs:
-        print(csv)
-    print("Corresponding index in episodes.jsonl: ", args.task_order)
-    output_parquet = lambda i: f"episode_00000{i}.parquet"
-    fps = 20.0
+    # Load the json that holds the names of all the gestures and their description
+    description = json.load(open(base_folder / "prompts.json"))    
+    assert len(description) == len(csvs), "Number of gesture descriptions don't match the number of csvs"
+    
+    print("Sorted Order for CSVS & Description:")
+    for i, csv in enumerate(csvs):
+        # Add the index of the gesture in 'csvs' that corresponds the entry in the dictionary 
+        description[csv.stem] = (description[csv.stem], i)
+        print(f'\t {csv.name} - : {description[csv.stem][0]}, {description[csv.stem][1]}')
+    print('\n')
+    fps = args.fps
+    # TODO: Check what these numbers should be in the dataset frame based? ID based? Are they not used?
     task_id = 0
     episode_index = 0
 
@@ -42,8 +53,7 @@ if __name__ == "__main__":
     ]
 
     # Load and reorder
-    steps_per_task = []
-    arr = []
+    steps_per_task = {}
     for i, csv in enumerate(csvs):
         df = pd.read_csv(csv)
         if all([inp_col[-2:] == exp_col[-2:] for inp_col, exp_col in zip(df.columns, input_cols)]):
@@ -69,27 +79,30 @@ if __name__ == "__main__":
         out["next.done"] = [False] * num_frames
 
         # Save to parquet
-        # print(os.path.basename(csv))
-        # print(output_parquet(args.task_order[i]))
-        out.to_parquet(os.path.join('novideo_data/data/chunk-000', output_parquet(args.task_order[i])), index=False)
-        print(f"✅ Saved {csv} to: {output_parquet(args.task_order[i])}")
-        
-        steps_per_task.append(len(df))
-    
-    # Save the current epsisodes.jsonl in an array
-    with open('novideo_data/meta/episodes.jsonl', 'r') as file:
-        for i, line in enumerate(file):
-            obj = json.loads(line)
-            arr.append(obj)
-
-    # Update episodes.jsonl with the correct length of the corresponding task
+        out.to_parquet(base_folder / 'data' / 'chunk-000' / f"episode_{i:06d}.parquet", index=False)
+        print(f"✅ Saved \033[91m{csv}\033[0m to: '\033[93m'episode_{i:06d}.parquet\033[0m")
+        # Save the number of steps in the gesture for episodes.jsonl
+        steps_per_task[csv.stem] = len(df)
+    # TODO: Flag if the number of steps don't match the number of frames in the video
+    # TODO: Account for extra frames in each video and mapping from video to gesture
+    # Save and rename videos into the designated folder
+    src = data_folder / 'Videos'
+    for video in src.glob("*.mp4"):
+        dst = base_folder / 'videos' / 'chunk-000' / 'observation.images.ego_view' / f"episode_{description[video.stem][1]:06d}.mp4"
+        if dst.exists():
+            shutil.copy(video, dst)
+            print(f"Copied \033[91m{video}\033[0m to \033[91m{dst}\033[0m")
+        else:
+            print("Destination folder does not exist:", dst.relative_to(data_folder))
+    # Update episodes.jsonl with the new gestures
     with open('novideo_data/meta/episodes.jsonl', 'w') as file:
-        for i, obj in enumerate(arr):
-            # TODO: Make this a dictionary
-            # arr - tasks are in the order found is episodes.jsonl
-            # steps_per_task - tasks are in the order found is in args.folder (alphabetical order)
-            # task_order has tasks in alphabetical order, holds the corresponding index the task has in episodes.json
-            obj['length'] = steps_per_task[args.task_order.index(i)]    # Maps steps_per_task order to order in episodes.jsonl
-            # print(obj['tasks'], args.task_order.index(i))
-            json.dump(obj, file)
+        for i, csv in enumerate(csvs):
+            line = {"episode_index": description[csv.stem][1], "tasks": [description[csv.stem][0], "valid"], "length": steps_per_task[csv.stem]}
+            json.dump(line, file)
             file.write("\n")
+    with open('novideo_data/meta/tasks.jsonl', 'w') as file:
+        for i, csv in enumerate(csvs):
+            line = {"task_index": description[csv.stem][1], "task": description[csv.stem][0]}
+            json.dump(line, file)
+            file.write("\n")
+        json.dump({"task_index": len(csvs), "task": "valid"}, file)
