@@ -21,8 +21,8 @@ if __name__ == "__main__":
     csvs = sorted(csvs)
     # Load the json that holds the names of all the gestures and their description
     description = json.load(open(base_folder / "prompts.json"))    
-    assert len(description) == len(csvs), "Number of gesture descriptions don't match the number of csvs"
-    
+    assert all(csv.stem in description for csv in csvs), "There does not exist a gesture descriptions for each csv"
+        
     print("Sorted Order for CSVS & Description:")
     for i, csv in enumerate(csvs):
         # Add the index of the gesture in 'csvs' that corresponds the entry in the dictionary 
@@ -69,11 +69,11 @@ if __name__ == "__main__":
         # Must be a list to added as a column
         out["action"] = np.vstack([data[1:], [data[-1]]]).tolist()
         out["timestamp"] = (np.arange(num_frames) / fps).round(5)
-        out["annotation.human.action.task_description"] = [description[csv.stem]] * num_frames
+        out["annotation.human.action.task_description"] = [description[csv.stem][1]] * num_frames
 
-        out["task_index"] = [description[csv.stem]] * num_frames # index of the task description in the meta/tasks.jsonl file
+        out["task_index"] = [description[csv.stem][1]] * num_frames # index of the task description in the meta/tasks.jsonl file
         out["annotation.human.validity"] = [len(csvs)] * num_frames # index of the task in the meta/tasks.jsonl file
-        out["episode_index"] = [description[csv.stem]] * num_frames # index of the episode
+        out["episode_index"] = [description[csv.stem][1]] * num_frames # index of the episode
         out["index"] = list(range(num_frames))
         out["next.reward"] = [0.0] * num_frames
         out["next.done"] = [False] * num_frames
@@ -89,11 +89,9 @@ if __name__ == "__main__":
     src = data_folder / 'Videos'
     for video in src.glob("*.mp4"):
         dst = base_folder / 'videos' / 'chunk-000' / 'observation.images.ego_view' / f"episode_{description[video.stem][1]:06d}.mp4"
-        if dst.exists():
-            shutil.copy(video, dst)
-            print(f"Copied \033[91m{video}\033[0m to \033[91m{dst}\033[0m")
-        else:
-            print("Destination folder does not exist:", dst.relative_to(data_folder))
+        shutil.copy(video, dst)
+        print(f"Copied \033[91m{video}\033[0m to \033[91m{dst}\033[0m")
+
     # Update episodes.jsonl with the new gestures
     with open('novideo_data/meta/episodes.jsonl', 'w') as file:
         for i, csv in enumerate(csvs):
