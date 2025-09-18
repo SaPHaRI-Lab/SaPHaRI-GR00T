@@ -1,4 +1,8 @@
-{"episode_index": 0, "tasks": ["Use your right arm to do a handshake in the air in front of you", "valid"], "length": 1206}
-{"episode_index": 1, "tasks": ["Use your right arm to perform a high five in the air in front of you", "valid"], "length": 1407}
-{"episode_index": 2, "tasks": ["Raise both arms to perform a greeting", "valid"], "length": 603}
-{"episode_index": 3, "tasks": ["Use your right right arm to do a wave in the air beside you", "valid"], "length": 1407}
+{"episode_index": 0, "tasks": ["Use your right arm to do a handshake in the air in front of you", "valid"], "length": 242}
+{"episode_index": 1, "tasks": ["Use your right arm to do a handshake in the air in front of you", "valid"], "length": 242}
+{"episode_index": 2, "tasks": ["Use your right arm to do a handshake in the air in front of you", "valid"], "length": 322}
+{"episode_index": 3, "tasks": ["Use your right arm to do a handshake in the air in front of you", "valid"], "length": 282}
+{"episode_index": 4, "tasks": ["Use your right arm to do a handshake in the air in front of you", "valid"], "length": 201}
+{"episode_index": 5, "tasks": ["Use your right arm to perform a high five in the air in front of you", "valid"], "length": 282}
+{"episode_index": 6, "tasks": ["Raise both arms and perform a greeting", "valid"], "length": 121}
+{"episode_index": 7, "tasks": ["Use your right right arm to do a wave in the air beside you", "valid"], "length": 282}
