@@ -1,4 +1,4 @@
-import pandas as pd
+import pandas as pd, cv2
 import numpy as np
 import os.path as path
 from pathlib import Path
@@ -6,16 +6,15 @@ import os, argparse, json, shutil
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--folder', '-f', help='The dataset folder', default='novideo_data')
+    parser.add_argument('--folder', '-f', help='The dataset folder')
     parser.add_argument('--reduced', '-r', action='store_true', help='If the reduced versions of the CSVs should be used instead')
-    parser.add_argument('--fps', help='If the reduced versions of the CSVs should be used instead', default=20)
     args = parser.parse_args()
-    # CONFIG
+    # CONFIG  
     base_folder = Path(args.folder)
     if not base_folder.exists():
         raise Exception("No such folder exists")
     data_folder = base_folder / 'raw_data_files'
-
+    fps = None
     # Grab all of the csvs in the given directory and sort by alphabetical order
     csvs = [file for file in (data_folder / 'reduced_csvs').glob('*.csv')] if args.reduced else [file for file in data_folder.glob('*.csv')]
     csvs = sorted(csvs)
@@ -29,7 +28,17 @@ if __name__ == "__main__":
         description[csv.stem] = (description[csv.stem], i)
         print(f'\t {csv.name} - : {description[csv.stem][0]}, {description[csv.stem][1]}')
     print('\n')
-    fps = args.fps
+    # TODO: Flag if the number of steps don't match the number of frames in the video
+    # TODO: Account for extra frames in each video and mapping from each video to its gesture
+    # Save and rename videos into the designated folder
+    src = data_folder / 'Videos'
+    for video in src.glob("*.mp4"):
+        dst = base_folder / 'videos' / 'chunk-000' / 'observation.images.ego_view' / f"episode_{description[video.stem][1]:06d}.mp4"
+        shutil.copy(video, dst)
+        print(f"Copied \033[91m{video}\033[0m to \033[91m{dst}\033[0m")
+        if fps is None:
+            fps = cv2.VideoCapture(dst).get(cv2.CAP_PROP_FPS) # Sets the initial fps
+        elif fps != cv2.VideoCapture(dst).get(cv2.CAP_PROP_FPS): print(f"Framerate across each video file is not the same. Original - {fps} : New - {cv2.VideoCapture(dst).get(cv2.CAP_PROP_FPS)}")
     # TODO: Check what these numbers should be in the dataset frame based? ID based? Are they not used?
     task_id = 0 
     episode_index = 0
@@ -83,14 +92,6 @@ if __name__ == "__main__":
         print(f"✅ Saved \033[91m{csv}\033[0m to: '\033[93m'episode_{i:06d}.parquet\033[0m")
         # Save the number of steps in the gesture for episodes.jsonl
         steps_per_task[csv.stem] = len(df)
-    # TODO: Flag if the number of steps don't match the number of frames in the video
-    # TODO: Account for extra frames in each video and mapping from video to gesture
-    # Save and rename videos into the designated folder
-    src = data_folder / 'Videos'
-    for video in src.glob("*.mp4"):
-        dst = base_folder / 'videos' / 'chunk-000' / 'observation.images.ego_view' / f"episode_{description[video.stem][1]:06d}.mp4"
-        shutil.copy(video, dst)
-        print(f"Copied \033[91m{video}\033[0m to \033[91m{dst}\033[0m")
 
     # Update episodes.jsonl with the new gestures
     with open('novideo_data/meta/episodes.jsonl', 'w') as file:
