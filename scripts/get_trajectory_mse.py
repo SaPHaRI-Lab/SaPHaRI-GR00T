@@ -11,7 +11,22 @@ import json, os
 PRE_TRAINED_MODEL_PATH = "nvidia/GR00T-N1-2B"
 DATASET_PATH = "novideo_data/"
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+bounds = [ # Is in the order of the column
+    (-3.059, 3.059), # left_w0
+    (-1.57079632679, 2.094), # left_w1
+    (-3.059, 3.059), # left_w2
+    (-3.05417993878, 3.05417993878), # left_e0
+    (-0.05, 2.618), # left_e1
+    (-1.70167993878, 1.70167993878), # left_s0
+    (-2.147, 1.047) # left_s1
+    (-1.70167993878, 1.70167993878), # right_s0
+    (-2.147, 1.047), # right_s1
+    (-3.05417993878, 3.05417993878), # right_e0
+    (-0.05, 2.618), # right_e1
+    (-3.059, 3.059), # right_w0
+    (-1.57079632679, 2.094), # right_w1
+    (-3.059, 3.059), # right_w2
+    ]
 def calc_mse_for_single_trajectory(
     policy: BasePolicy,
     dataset: LeRobotSingleDataset,
@@ -94,6 +109,7 @@ def calc_mse_for_single_trajectory(
             ax.set_xlabel('Steps in Trajectory')
             ax.set_ylabel('Rotation in Radians')
             ax.legend()
+            ax.set_ylim(bounds[i][0], bounds[i][1])
 
         last_ax = axes.flatten()[-1]
         last_ax.axis('off')
